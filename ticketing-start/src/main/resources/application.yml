@@ -1,0 +1,44 @@
+server:
+  port: 1122
+  tomcat:
+    threads:
+      max: 10
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include:
+          - '*'
+  endpoint:
+    health:
+      show-details: always
+resilience4j:
+  circuitbreaker:
+    instances:
+      backendA:
+        registerHealthIndicator: true
+        slidingWindowSize: 100
+      backendB:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        permittedNumberOfCallsInHalfOpenState: 3
+        # slidingWindowType: TIME_BASED
+        minimumNumberOfCalls: 3
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 10
+        eventConsumerBufferSize: 3
+  ratelimiter:
+    instances:
+      backendA:
+        limitForPeriod: 2 #2 request moi giay
+        limitRefreshPeriod: 10s
+        timeoutDuration: 0 # thoi gian cho toi da cho moi request neu da den gioi han limit
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 100
+      backendB:
+        limitForPeriod: 6
+        limitRefreshPeriod: 500ms
+        timeoutDuration: 3s

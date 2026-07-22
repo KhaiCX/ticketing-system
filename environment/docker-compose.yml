@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: ticketing-system
+    ports:
+      - "8080:8080"
+    environment:
+      # Nếu bạn có cấu hình trong application.properties/application.yml
+      # thì có thể truyền biến môi trường ở đây
+      SPRING_PROFILES_ACTIVE: docker
+    networks:
+      - ticketing-system
+
+networks:
+  ticketing-system:
+    driver: bridge

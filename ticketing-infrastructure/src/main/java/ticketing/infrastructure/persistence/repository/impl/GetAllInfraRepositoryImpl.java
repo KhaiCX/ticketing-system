@@ -2,7 +2,6 @@ package ticketing.infrastructure.persistence.repository.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import ticketing.domain.model.entity.TicketDomain;
 import ticketing.domain.repository.GetAllTicketDomainRepository;
 import ticketing.infrastructure.persistence.mapper.GetAllTicketInfraMapper;
@@ -15,6 +14,7 @@ import java.util.List;
 public class GetAllInfraRepositoryImpl implements GetAllTicketDomainRepository {
     private final GetAllTicketInfraRepository repository;
     private final GetAllTicketInfraMapper mapper;
+
     @Override
     public List<TicketDomain> findAll() {
         List<Ticket> tickets = repository.findAll();

@@ -12,6 +12,10 @@ management:
       exposure:
         include:
           - '*'
+  metrics:
+    export:
+      prometheus:
+        enabled: true
   endpoint:
     health:
       show-details: always

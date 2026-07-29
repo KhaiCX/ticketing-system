@@ -1,3 +1,59 @@
+server:
+  port: 1122
+  tomcat:
+    threads:
+      max: 10
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include:
+          - '*'
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoint:
+    health:
+      show-details: always
+resilience4j:
+  circuitbreaker:
+    instances:
+      backendA:
+        registerHealthIndicator: true
+        slidingWindowSize: 100
+      getTicketByIdRequest:
+        failureRateThreshold: 50 # Ngưỡng tỷ lệ lỗi (%) — khi tỷ lệ lỗi ≥ ngưỡng, CircuitBreaker chuyển sang open.
+        slowCallRateThreshold: 100 # Ngưỡng tỷ lệ cuộc gọi chậm (%) — khi tỷ lệ cuộc gọi chậm ≥ ngưỡng, CircuitBreaker chuyển sang open.
+        slowCallDurationThreshold: 60000 # Ngưỡng thời lượng để coi một cuộc gọi là chậm.
+        permittedNumberOfCallsInHalfOpenState: 10 # Số cuộc gọi được phép khi ở HALF_OPEN.
+        maxWaitDurationInHalfOpenState: 0 # Thời gian chờ tối đa ở HALF_OPEN trước khi chuyển về OPEN; 0 nghĩa là chờ vô hạn cho đến khi các cuộc gọi được phép hoàn thành.
+        slidingWindowType: COUNT_BASED # Loại sliding window: COUNT_BASED hoặc TIME_BASED.
+        slidingWindowSize: 100 # Kích thước sliding window.
+        minimumNumberOfCalls: 100 # Số cuộc gọi tối thiểu cần có để tính tỷ lệ lỗi hoặc tỷ lệ cuộc gọi chậm.
+        waitDurationInOpenState: 60000 # Thời gian CircuitBreaker chờ trước khi chuyển từ OPEN sang HALF_OPEN.
+        automaticTransitionFromOpenToHalfOpenEnabled: false # Nếu true, CircuitBreaker tự động chuyển từ OPEN sang HALF_OPEN sau waitDurationInOpenState mà không cần có cuộc gọi kích hoạt.
+        recordExceptions: empty # Danh sách ngoại lệ được ghi nhận là lỗi. Nếu chỉ định, các ngoại lệ khác được tính là thành công (trừ khi bị ignore).
+        ignoreExceptions: empty # Danh sách ngoại lệ bị bỏ qua (không tính là lỗi hay thành công).
+        recordFailurePredicate: throwable -> true # Predicate tùy chỉnh để xác định ngoại lệ nào được tính là lỗi.
+        ignoreExceptionPredicate: throwable -> false # Predicate tùy chỉnh để xác định ngoại lệ nào bị bỏ qua.
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 3
+  ratelimiter:
+    instances:
+      backendA:
+        limitForPeriod: 2 #2 request moi giay
+        limitRefreshPeriod: 10s
+        timeoutDuration: 0 # thoi gian cho toi da cho moi request neu da den gioi han limit
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 100
+      backendB:
+        limitForPeriod: 6
+        limitRefreshPeriod: 500ms
+        timeoutDuration: 3s
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/ticketing-system

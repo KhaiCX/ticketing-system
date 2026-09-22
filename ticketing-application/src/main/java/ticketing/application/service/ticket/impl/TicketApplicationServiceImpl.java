@@ -1,6 +1,7 @@
 package ticketing.application.service.ticket.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import ticketing.application.service.ticket.TicketApplicationService;
 import ticketing.domain.model.entity.TicketDomain;
@@ -13,6 +14,7 @@ public class TicketApplicationServiceImpl implements TicketApplicationService {
     private final TicketDomainService ticketDomainService;
 
     @Override
+    @Cacheable(cacheNames = "tickets", key = "#ticketId")
     public TicketDomain getTicketById(Long ticketId) {
         return ticketDomainService.getTicketById(ticketId);
     }

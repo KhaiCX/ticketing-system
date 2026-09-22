@@ -12,13 +12,13 @@ management:
       exposure:
         include:
           - '*'
+    health:
+      show-details: always
   metrics:
     export:
       prometheus:
         enabled: true
-  endpoint:
-    health:
-      show-details: always
+
 resilience4j:
   circuitbreaker:
     instances:
@@ -36,10 +36,11 @@ resilience4j:
         minimumNumberOfCalls: 100 # Số cuộc gọi tối thiểu cần có để tính tỷ lệ lỗi hoặc tỷ lệ cuộc gọi chậm.
         waitDurationInOpenState: 60000 # Thời gian CircuitBreaker chờ trước khi chuyển từ OPEN sang HALF_OPEN.
         automaticTransitionFromOpenToHalfOpenEnabled: false # Nếu true, CircuitBreaker tự động chuyển từ OPEN sang HALF_OPEN sau waitDurationInOpenState mà không cần có cuộc gọi kích hoạt.
-        recordExceptions: empty # Danh sách ngoại lệ được ghi nhận là lỗi. Nếu chỉ định, các ngoại lệ khác được tính là thành công (trừ khi bị ignore).
-        ignoreExceptions: empty # Danh sách ngoại lệ bị bỏ qua (không tính là lỗi hay thành công).
-        recordFailurePredicate: throwable -> true # Predicate tùy chỉnh để xác định ngoại lệ nào được tính là lỗi.
-        ignoreExceptionPredicate: throwable -> false # Predicate tùy chỉnh để xác định ngoại lệ nào bị bỏ qua.
+        recordExceptions: # Danh sách ngoại lệ được ghi nhận là lỗi. Nếu chỉ định, các ngoại lệ khác được tính là thành công (trừ khi bị ignore).
+          - ticketing.domain.exception.ResourceNotFoundException
+        ignoreExceptions: # Danh sách ngoại lệ bị bỏ qua (không tính là lỗi hay thành công).
+        # recordFailurePredicate: throwable -> true # Predicate tùy chỉnh để xác định ngoại lệ nào được tính là lỗi.
+        # ignoreExceptionPredicate: throwable -> false # Predicate tùy chỉnh để xác định ngoại lệ nào bị bỏ qua.
         registerHealthIndicator: true
         eventConsumerBufferSize: 3
   ratelimiter:

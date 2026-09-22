@@ -1,6 +1,7 @@
 package ticketing.controller.http;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ticketing.application.service.ticket.TicketApplicationService;
 import ticketing.domain.model.entity.TicketDomain;
-import ticketing.exception.ResponseError;
-
 import java.time.LocalDateTime;
 
 @RestController
@@ -26,7 +25,7 @@ public class TicketController {
         return ResponseEntity.ok(ticketApplicationService.getTicketById(ticketId));
     }
 
-    public ResponseEntity<TicketDomain> fallbackGetTicketById() {
+    public ResponseEntity<TicketDomain> fallbackGetTicketById(Throwable exception) {
 
         //  Get ticket from cache
         return ResponseEntity.ok(TicketDomain.builder()

@@ -7,7 +7,6 @@ import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
@@ -28,7 +27,6 @@ public class CaffeineCacheConfig {
                 .build());
     }
 
-    @Primary
     @Bean("caffeineCacheManager")
     public CacheManager caffeineCacheManager(CaffeineCache caffeineCache) {
         SimpleCacheManager manager = new SimpleCacheManager();

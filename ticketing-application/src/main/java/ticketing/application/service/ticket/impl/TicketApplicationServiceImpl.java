@@ -15,10 +15,7 @@ public class TicketApplicationServiceImpl implements TicketApplicationService {
     private final TicketDomainService ticketDomainService;
 
     @Override
-    @Caching(cacheable = {
-            @Cacheable(cacheNames = "tickets", cacheManager = "caffeineCacheManager"),
-            @Cacheable(cacheNames = "tickets", cacheManager = "redisCacheManager")
-    })
+    @Cacheable(cacheNames = "tickets")
     public TicketDomain getTicketById(Long ticketId) {
         return ticketDomainService.getTicketById(ticketId);
     }
